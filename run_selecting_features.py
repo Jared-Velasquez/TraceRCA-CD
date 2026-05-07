@@ -49,12 +49,25 @@ def stderr_criteria(empirical, reference, threshold):
 @click.option('-o', '--output', 'output_file', default='.', type=str)
 @click.option('-h', '--history', default='historical_data.pkl', type=str)
 @click.option("-f", "--fisher", "fisher_threshold", default=1, type=float)
-def selecting_feature_main(input_file: str, output_file: str, history: str, fisher_threshold):
+@click.option('--baseline-window', type=click.Choice(['global', 'dual']), default='global',
+              help='F2b: global=use --history pkl; dual=use --dual-cache pkl history field.')
+@click.option('--dual-cache', 'dual_cache_file', default='', type=str,
+              help='[dual only] Per-case dual-window cache pkl produced by prepare_model dual mode.')
+def selecting_feature_main(input_file: str, output_file: str, history: str, fisher_threshold,
+                           baseline_window, dual_cache_file):
     input_file = Path(input_file)
     output_file = Path(output_file)
-    with open(history, 'rb') as f:
-        history = pickle.load(f)
-    # logger.debug(f'{input_file}')
+
+    if baseline_window == 'dual':
+        if not dual_cache_file:
+            raise click.UsageError('--baseline-window=dual requires --dual-cache')
+        with open(dual_cache_file, 'rb') as f:
+            dual_cache = pickle.load(f)
+        history = dual_cache['history']
+    else:
+        with open(history, 'rb') as f:
+            history = pickle.load(f)
+
     with open(str(input_file), 'rb') as f:
         df = pickle.load(f)
     df = df.set_index(keys=['source', 'target'], drop=True).sort_index()

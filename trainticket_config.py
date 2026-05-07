@@ -67,6 +67,9 @@ EXP_NOISE_LIST = [0, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64]
 # Off-switch defaults for paper-accurate Stage 1 (F1b/F2a/F2b/per-op).
 # Every flag's neutral value here reproduces the legacy baseline bit-for-bit.
 STAGE1_DEFAULTS = {
-    'admit_self_spans': False,    # F1b: drop self-edges (legacy)
-    'admit_root_spans': False,    # F1b: drop root spans (legacy)
+    'admit_self_spans':    False,    # F1b: drop self-edges (legacy)
+    'admit_root_spans':    False,    # F1b: drop root spans (legacy)
+    'baseline_window':     'global', # F2b: legacy single-window concatenated history
+    'last_slot_seconds':   300,
+    'last_period_seconds': 86400,
 }
