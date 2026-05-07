@@ -62,3 +62,11 @@ SERVICE2IDX = {service: idx for idx, service in enumerate(INVOLVED_SERVICES)}
 
 EXP_NOISE_LIST = [0, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64]
 # EXP_NOISE_LIST = [0]
+
+
+# Off-switch defaults for paper-accurate Stage 1 (F1b/F2a/F2b/per-op).
+# Every flag's neutral value here reproduces the legacy baseline bit-for-bit.
+STAGE1_DEFAULTS = {
+    'admit_self_spans': False,    # F1b: drop self-edges (legacy)
+    'admit_root_spans': False,    # F1b: drop root spans (legacy)
+}

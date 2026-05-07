@@ -32,8 +32,11 @@ Encode train-ticket pickle data into data frame of invocations:
 @click.option('-o', '--output', 'output_file', default='', type=str)
 @click.option('--dataset', default='tt', type=click.Choice(['tt', 'ob']),
               help='Dataset config: tt=Train-Ticket (default), ob=Online-Boutique')
+@click.option('--admit-self-spans', is_flag=True, default=False,
+              help='F1b: keep rows where source==target. Default off = legacy.')
 # @click.option('-e', '--error-time', default='error_time.pkl', type=str)
-def train_ticket_invo_encoding_main(input_file: str, output_file: str, dataset: str):
+def train_ticket_invo_encoding_main(input_file: str, output_file: str, dataset: str,
+                                    admit_self_spans: bool):
     cfg = importlib.import_module('trainticket_config' if dataset == 'tt' else 'onlineboutique_config')
     ENABLE_ALL_FEATURES = cfg.ENABLE_ALL_FEATURES
     FEATURE_NAMES = cfg.FEATURE_NAMES
@@ -64,7 +67,10 @@ def train_ticket_invo_encoding_main(input_file: str, output_file: str, dataset: 
         }
 
     for trace in input_data:
-        indices = np.asarray([idx for idx, (source, target) in enumerate(trace['s_t']) if source != target])
+        if admit_self_spans:
+            indices = np.arange(len(trace['s_t']))
+        else:
+            indices = np.asarray([idx for idx, (source, target) in enumerate(trace['s_t']) if source != target])
         if len(indices) <= 0:
             continue
         for key, item in trace.items():

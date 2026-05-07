@@ -131,26 +131,33 @@ def build_span_lookup(df: pd.DataFrame) -> dict:
     return lookup
 
 
-def reconstruct_invocations(trace_spans, span_lookup):
+def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_root=False):
     """
     For each span with a cross-service parent, yield one invocation tuple:
         (src, tgt, start_us, end_us, latency_us, http_status)
+
+    Off-switch: with admit_self=False and admit_root=False, the set of emitted
+    invocations is identical to the legacy implementation (rootless spans and
+    same-service self-edges are dropped).
     """
     invocations = []
     for span in trace_spans:
         parent_id = span.parentSpanID
-        if not parent_id:
-            continue
-        parent = span_lookup.get(parent_id)
-        if parent is None:
+        tgt = simple_name(span.serviceName)
+        if tgt not in INVOLVED_SET:
             continue
 
-        src = simple_name(parent.serviceName)
-        tgt = simple_name(span.serviceName)
-        if src == tgt:
-            continue
-        if src not in INVOLVED_SET or tgt not in INVOLVED_SET:
-            continue
+        if not parent_id or parent_id not in span_lookup:
+            if not admit_root:
+                continue
+            src = tgt  # root span: emit as (self, self) singleton invocation
+        else:
+            parent = span_lookup[parent_id]
+            src = simple_name(parent.serviceName)
+            if src not in INVOLVED_SET:
+                continue
+            if src == tgt and not admit_self:
+                continue
 
         start_us = int(span.startTime)
         dur_us = int(span.duration)
@@ -186,7 +193,8 @@ def build_trace_dict(trace_id, invocations, label, fault_type, root_cause):
 # Per-case processing
 # ---------------------------------------------------------------------------
 
-def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_seconds: int = 0):
+def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_seconds: int = 0,
+                 admit_self: bool = False, admit_root: bool = False):
     """
     Convert one RE2-TT case directory to TraceRCA pkl files.
     Writes:
@@ -233,7 +241,9 @@ def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_s
         else:
             label = 1
 
-        invocations = reconstruct_invocations(spans, span_lookup)
+        invocations = reconstruct_invocations(
+            spans, span_lookup, admit_self=admit_self, admit_root=admit_root,
+        )
         if not invocations:
             continue
 
@@ -327,6 +337,15 @@ def main():
         help='Seconds after injection to treat as warm-up (label=0). '
              'Recommended: 60 for cpu/mem faults (default: 0 = no change).',
     )
+    parser.add_argument(
+        '--admit-self-spans', action='store_true', default=False,
+        help='F1b: keep spans where caller==callee. Default off = legacy behavior.',
+    )
+    parser.add_argument(
+        '--admit-root-spans', action='store_true', default=False,
+        help='F1b: emit root spans as (self, self) singleton invocations. '
+             'Default off = legacy behavior.',
+    )
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -341,7 +360,10 @@ def main():
 
     print(f"Found {len(case_dirs)} case(s) to process.")
     for case_dir in case_dirs:
-        process_case(case_dir, output_dir, args.normal_ratio, args.warmup_seconds)
+        process_case(
+            case_dir, output_dir, args.normal_ratio, args.warmup_seconds,
+            admit_self=args.admit_self_spans, admit_root=args.admit_root_spans,
+        )
 
     print("\nAll done.")
 

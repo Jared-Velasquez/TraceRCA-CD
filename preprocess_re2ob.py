@@ -50,27 +50,34 @@ INVOLVED_SET = set(INVOLVED_SERVICES)
 # OB-specific helpers
 # ---------------------------------------------------------------------------
 
-def reconstruct_invocations(trace_spans, span_lookup):
+def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_root=False):
     """
-    Same logic as preprocess_re2tt, with two OB-specific changes:
+    Same logic as preprocess_re2tt.reconstruct_invocations, with two OB-specific
+    changes:
       - INVOLVED_SET filters on Online Boutique service names
       - statusCode is a float gRPC code, so parsed as int(float(...))
+
+    Off-switch: with admit_self=False and admit_root=False, the set of emitted
+    invocations is identical to the legacy implementation.
     """
     invocations = []
     for span in trace_spans:
         parent_id = span.parentSpanID
-        if not parent_id:
-            continue
-        parent = span_lookup.get(parent_id)
-        if parent is None:
+        tgt = simple_name(span.serviceName)
+        if tgt not in INVOLVED_SET:
             continue
 
-        src = simple_name(parent.serviceName)
-        tgt = simple_name(span.serviceName)
-        if src == tgt:
-            continue
-        if src not in INVOLVED_SET or tgt not in INVOLVED_SET:
-            continue
+        if not parent_id or parent_id not in span_lookup:
+            if not admit_root:
+                continue
+            src = tgt  # root span: emit as (self, self) singleton invocation
+        else:
+            parent = span_lookup[parent_id]
+            src = simple_name(parent.serviceName)
+            if src not in INVOLVED_SET:
+                continue
+            if src == tgt and not admit_self:
+                continue
 
         start_us = int(span.startTime)
         dur_us = int(span.duration)
@@ -87,7 +94,8 @@ def reconstruct_invocations(trace_spans, span_lookup):
     return invocations
 
 
-def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_seconds: int = 0):
+def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_seconds: int = 0,
+                 admit_self: bool = False, admit_root: bool = False):
     """
     Convert one RE2-OB case directory to TraceRCA pkl files.
     Writes:
@@ -132,7 +140,9 @@ def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_s
         else:
             label = 1
 
-        invocations = reconstruct_invocations(spans, span_lookup)
+        invocations = reconstruct_invocations(
+            spans, span_lookup, admit_self=admit_self, admit_root=admit_root,
+        )
         if not invocations:
             continue
 
@@ -202,6 +212,15 @@ def main():
         help='Seconds after injection to treat as warm-up (label=0). '
              'Recommended: 60 for cpu/mem faults (default: 0).',
     )
+    parser.add_argument(
+        '--admit-self-spans', action='store_true', default=False,
+        help='F1b: keep spans where caller==callee. Default off = legacy behavior.',
+    )
+    parser.add_argument(
+        '--admit-root-spans', action='store_true', default=False,
+        help='F1b: emit root spans as (self, self) singleton invocations. '
+             'Default off = legacy behavior.',
+    )
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -216,7 +235,10 @@ def main():
 
     print(f"Found {len(case_dirs)} case(s) to process.")
     for case_dir in case_dirs:
-        process_case(case_dir, output_dir, args.normal_ratio, args.warmup_seconds)
+        process_case(
+            case_dir, output_dir, args.normal_ratio, args.warmup_seconds,
+            admit_self=args.admit_self_spans, admit_root=args.admit_root_spans,
+        )
 
     print("\nAll done.")
 
