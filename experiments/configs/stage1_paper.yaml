@@ -1,0 +1,65 @@
+# Paper-accurate Stage 1 configuration (F1b + F2a + F2b + per-operation).
+#
+# Each section is one ablation cell on top of the legacy baseline. Cells
+# correspond to the rows in the table at experiments/plans/paper_accurate_stage1_plan.md
+# (lines 277-284). A cell is "on" if it overrides any default below.
+#
+# Defaults (the neutral / off-switch values) reproduce the legacy baseline
+# bit-for-bit. They are also defined in trainticket_config.STAGE1_DEFAULTS and
+# onlineboutique_config.STAGE1_DEFAULTS — keep both sources in sync.
+
+defaults:
+  admit_self_spans:    false
+  admit_root_spans:    false
+  feature_selector:    stderr
+  fs_delta:            0.1
+  fs_floor:            0.0
+  baseline_window:     global
+  last_slot_seconds:   300
+  last_period_seconds: 86400
+  stage1_granularity:  pair
+  min_baseline_samples: 30
+
+cells:
+  baseline_0000:
+    description: "Off-switch parity check. All flags neutral."
+    overrides: {}
+
+  f1b_only:
+    description: "F1b: admit self-spans and root spans (auth-slice fix)."
+    overrides:
+      admit_self_spans: true
+      admit_root_spans: true
+
+  f2a_only:
+    description: "F2a: paper feature selector (alpha_after - alpha_before > delta_fs * alpha_before)."
+    overrides:
+      feature_selector: paper
+      fs_delta: 0.1
+
+  f2b_only:
+    description: "F2b: dual-window per-case baseline."
+    overrides:
+      baseline_window: dual
+
+  perop_only:
+    description: "Per-operation Stage 1 keying (callee_method)."
+    overrides:
+      stage1_granularity: operation
+
+  f1b_perop:
+    description: "F1b + per-operation."
+    overrides:
+      admit_self_spans: true
+      admit_root_spans: true
+      stage1_granularity: operation
+
+  all_on:
+    description: "All four fixes enabled."
+    overrides:
+      admit_self_spans: true
+      admit_root_spans: true
+      feature_selector: paper
+      fs_delta: 0.1
+      baseline_window: dual
+      stage1_granularity: operation

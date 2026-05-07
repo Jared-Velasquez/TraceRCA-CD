@@ -180,6 +180,7 @@ pyrightconfig.json
 data/
 output/
 docs/
-experiments/
+experiments/day*
+experiments/*/*.md
 .vscode/
 __MACOSX/

@@ -1,0 +1,17 @@
+{
+  "cells_run": [
+    "f2b_only"
+  ],
+  "cases_run": [
+    "ts-route-service_delay_1.invo.pkl"
+  ],
+  "config_file": "/home/jaredvel25/TraceRCA-CD/experiments/configs/stage1_paper.yaml",
+  "entries": [
+    {
+      "cell": "f2b_only",
+      "case": "ts-route-service_delay_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/f2b_only/ts-route-service_delay_1/invo.result.pkl"
+    }
+  ],
+  "timestamp": "2026-05-05T21:30:51"
+}

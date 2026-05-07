@@ -1,0 +1,12 @@
+{
+  "admit_root_spans": false,
+  "admit_self_spans": false,
+  "baseline_window": "global",
+  "feature_selector": "stderr",
+  "fs_delta": 0.1,
+  "fs_floor": 0.0,
+  "last_period_seconds": 86400,
+  "last_slot_seconds": 300,
+  "min_baseline_samples": 30,
+  "stage1_granularity": "pair"
+}
