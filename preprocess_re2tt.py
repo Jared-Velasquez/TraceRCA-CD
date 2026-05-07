@@ -51,6 +51,7 @@ INVOLVED_SET = set(INVOLVED_SERVICES)
 TRACES_COLS = [
     'traceID', 'spanID', 'serviceName',
     'startTime', 'duration', 'statusCode', 'parentSpanID',
+    'methodName', 'operationName',
 ]
 
 
@@ -101,11 +102,16 @@ def load_traces(case_dir: Path) -> pd.DataFrame:
     Column units in RE2-TT:
         startTime  — microseconds
         duration   — microseconds
+
+    methodName/operationName are loaded if present (used by per-op Stage 1);
+    if absent, the columns are filled with empty strings.
     """
     csv_path = case_dir / 'traces.csv'
+    header_cols = pd.read_csv(csv_path, nrows=0).columns.tolist()
+    available = [c for c in TRACES_COLS if c in header_cols]
     df = pd.read_csv(
         csv_path,
-        usecols=TRACES_COLS,
+        usecols=available,
         dtype={
             'traceID':     str,
             'spanID':      str,
@@ -114,12 +120,18 @@ def load_traces(case_dir: Path) -> pd.DataFrame:
             'duration':    'int64',
             'statusCode':  str,       # may be empty
             'parentSpanID': str,
+            'methodName':  str,
+            'operationName': str,
         },
         low_memory=False,
     )
-    # Normalise missing values
     df['parentSpanID'] = df['parentSpanID'].fillna('')
     df['statusCode'] = df['statusCode'].fillna('0')
+    for opt_col in ('methodName', 'operationName'):
+        if opt_col in df.columns:
+            df[opt_col] = df[opt_col].fillna('')
+        else:
+            df[opt_col] = ''
     return df
 
 
@@ -131,14 +143,23 @@ def build_span_lookup(df: pd.DataFrame) -> dict:
     return lookup
 
 
+def _span_method(span) -> str:
+    """Return the callee method, falling back to operationName if methodName is empty."""
+    method = getattr(span, 'methodName', '') or ''
+    if not method:
+        method = getattr(span, 'operationName', '') or ''
+    return method
+
+
 def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_root=False):
     """
     For each span with a cross-service parent, yield one invocation tuple:
-        (src, tgt, start_us, end_us, latency_us, http_status)
+        (src, tgt, start_us, end_us, latency_us, http_status, src_method, tgt_method)
 
     Off-switch: with admit_self=False and admit_root=False, the set of emitted
-    invocations is identical to the legacy implementation (rootless spans and
-    same-service self-edges are dropped).
+    invocations is identical to the legacy implementation. The two trailing
+    method fields are additive — downstream consumers that key only on
+    (source, target) ignore them.
     """
     invocations = []
     for span in trace_spans:
@@ -151,6 +172,7 @@ def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_ro
             if not admit_root:
                 continue
             src = tgt  # root span: emit as (self, self) singleton invocation
+            src_method = ''
         else:
             parent = span_lookup[parent_id]
             src = simple_name(parent.serviceName)
@@ -158,6 +180,9 @@ def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_ro
                 continue
             if src == tgt and not admit_self:
                 continue
+            src_method = _span_method(parent)
+
+        tgt_method = _span_method(span)
 
         start_us = int(span.startTime)
         dur_us = int(span.duration)
@@ -169,13 +194,18 @@ def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_ro
         except (ValueError, AttributeError):
             status = 0
 
-        invocations.append((src, tgt, start_us, end_us, dur_us, status))
+        invocations.append(
+            (src, tgt, start_us, end_us, dur_us, status, src_method, tgt_method)
+        )
 
     return invocations
 
 
 def build_trace_dict(trace_id, invocations, label, fault_type, root_cause):
     s_t = [(inv[0], inv[1]) for inv in invocations]
+    # Method fields are additive (per-op Stage 1). Tuples may be 6 or 8 wide
+    # depending on whether reconstruct_invocations was called pre- or post-F1b.
+    has_methods = invocations and len(invocations[0]) >= 8
     return {
         'trace_id':   trace_id,
         'label':      label,
@@ -186,6 +216,8 @@ def build_trace_dict(trace_id, invocations, label, fault_type, root_cause):
         'endtime':    [inv[3] for inv in invocations],
         'latency':    [inv[4] for inv in invocations],
         'http_status':[inv[5] for inv in invocations],
+        'caller_method': [inv[6] if has_methods else '' for inv in invocations],
+        'callee_method': [inv[7] if has_methods else '' for inv in invocations],
     }
 
 

@@ -57,6 +57,7 @@ def train_ticket_invo_encoding_main(input_file: str, output_file: str, dataset: 
             'file_write_rate': [], 'file_read_rate': [],
             'net_send_rate': [], 'net_receive_rate': [], 'http_status': [],
             'trace_start_timestamp': [], 'trace_end_timestamp': [],
+            'caller_method': [], 'callee_method': [],
         }
     else:
         data = {
@@ -64,6 +65,7 @@ def train_ticket_invo_encoding_main(input_file: str, output_file: str, dataset: 
             'trace_id': [],
             'latency': [], 'http_status': [],
             'trace_start_timestamp': [], 'trace_end_timestamp': [],
+            'caller_method': [], 'callee_method': [],
         }
 
     for trace in input_data:
@@ -81,6 +83,18 @@ def train_ticket_invo_encoding_main(input_file: str, output_file: str, dataset: 
                     raise RuntimeError(f"{key} {item} {indices}")
         data['source'].extend(list(simple_name(_[0]) for _ in trace['s_t']))
         data['target'].extend(list(simple_name(_[1]) for _ in trace['s_t']))
+        # Method columns are additive (per-op Stage 1). When trace dicts predate
+        # the per-op schema, fall back to empty strings so downstream consumers
+        # that key only on (source, target) are unaffected.
+        n = len(trace['s_t'])
+        caller_methods = trace.get('caller_method')
+        callee_methods = trace.get('callee_method')
+        if caller_methods is None or len(caller_methods) != n:
+            caller_methods = [''] * n
+        if callee_methods is None or len(callee_methods) != n:
+            callee_methods = [''] * n
+        data['caller_method'].extend(caller_methods)
+        data['callee_method'].extend(callee_methods)
 
         if ENABLE_ALL_FEATURES:
             data['start_timestamp'].extend(_ / 1e6 for _ in trace['timestamp'])

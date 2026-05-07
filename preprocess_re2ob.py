@@ -35,6 +35,7 @@ from data.trainticket.download import simple_name
 from onlineboutique_config import INVOLVED_SERVICES
 from preprocess_re2tt import (
     SUPPORTED_FAULT_TYPES,
+    _span_method,
     build_span_lookup,
     build_trace_dict,
     find_case_dirs,
@@ -71,6 +72,7 @@ def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_ro
             if not admit_root:
                 continue
             src = tgt  # root span: emit as (self, self) singleton invocation
+            src_method = ''
         else:
             parent = span_lookup[parent_id]
             src = simple_name(parent.serviceName)
@@ -78,6 +80,9 @@ def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_ro
                 continue
             if src == tgt and not admit_self:
                 continue
+            src_method = _span_method(parent)
+
+        tgt_method = _span_method(span)
 
         start_us = int(span.startTime)
         dur_us = int(span.duration)
@@ -89,7 +94,9 @@ def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_ro
         except (ValueError, AttributeError):
             status = 0
 
-        invocations.append((src, tgt, start_us, end_us, dur_us, status))
+        invocations.append(
+            (src, tgt, start_us, end_us, dur_us, status, src_method, tgt_method)
+        )
 
     return invocations
 
