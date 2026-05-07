@@ -44,16 +44,43 @@ def stderr_criteria(empirical, reference, threshold):
     return (emp_ratio - ref_ratio) > threshold * ref_ratio + 1.0
 
 
+def paper_criteria(empirical, reference, delta_fs, fs_floor=0.0):
+    """
+    F2a: paper Eq. (IWQoS 2021, p.3): alpha_after - alpha_before > delta_fs * alpha_before.
+
+    alpha = mean(|v - mu_ref| / sigma_ref) over the relevant invocation set.
+    fs_floor (optional, non-paper) requires alpha_after > fs_floor; default 0.0 = paper-faithful.
+    """
+    ref = np.asarray(reference, dtype=float)
+    emp = np.asarray(empirical, dtype=float)
+    if ref.size == 0 or emp.size == 0:
+        return False
+    mu = float(np.mean(ref))
+    sd = float(np.maximum(np.std(ref), 0.1))
+    alpha_before = float(np.mean(np.abs(ref - mu) / sd))
+    alpha_after = float(np.mean(np.abs(emp - mu) / sd))
+    if alpha_after <= fs_floor:
+        return False
+    return (alpha_after - alpha_before) > (delta_fs * alpha_before)
+
+
 @click.command('invocation feature selection')
 @click.option('-i', '--input', 'input_file', default="*.pkl", type=str)
 @click.option('-o', '--output', 'output_file', default='.', type=str)
 @click.option('-h', '--history', default='historical_data.pkl', type=str)
 @click.option("-f", "--fisher", "fisher_threshold", default=1, type=float)
+@click.option('--feature-selector', type=click.Choice(['stderr', 'paper']), default='stderr',
+              help='F2a: stderr (legacy) or paper (alpha_after - alpha_before > delta_fs * alpha_before).')
+@click.option('--fs-delta', default=0.1, type=float,
+              help='[paper only] delta_fs threshold (paper default 0.1).')
+@click.option('--fs-floor', default=0.0, type=float,
+              help='[paper only] non-paper guard: require alpha_after > fs_floor (default 0.0).')
 @click.option('--baseline-window', type=click.Choice(['global', 'dual']), default='global',
               help='F2b: global=use --history pkl; dual=use --dual-cache pkl history field.')
 @click.option('--dual-cache', 'dual_cache_file', default='', type=str,
               help='[dual only] Per-case dual-window cache pkl produced by prepare_model dual mode.')
 def selecting_feature_main(input_file: str, output_file: str, history: str, fisher_threshold,
+                           feature_selector, fs_delta, fs_floor,
                            baseline_window, dual_cache_file):
     input_file = Path(input_file)
     output_file = Path(output_file)
@@ -84,7 +111,10 @@ def selecting_feature_main(input_file: str, output_file: str, history: str, fish
         #     empirical, reference, alternative=ALTERNATIVE[feature]
         # )[1]
         p_value = -1
-        fisher = stderr_criteria(empirical, reference, fisher_threshold)
+        if feature_selector == 'paper':
+            fisher = paper_criteria(empirical, reference, fs_delta, fs_floor)
+        else:
+            fisher = stderr_criteria(empirical, reference, fisher_threshold)
         # fisher = distribution_criteria(empirical, reference,fisher_threshold)
         # if target == 'ts-station-service':
         #    print(source,feature,fisher)

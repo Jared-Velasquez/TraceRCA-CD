@@ -25,6 +25,9 @@ SERVICE2IDX = {service: idx for idx, service in enumerate(INVOLVED_SERVICES)}
 STAGE1_DEFAULTS = {
     'admit_self_spans':    False,
     'admit_root_spans':    False,
+    'feature_selector':    'stderr',
+    'fs_delta':            0.1,
+    'fs_floor':            0.0,
     'baseline_window':     'global',
     'last_slot_seconds':   300,
     'last_period_seconds': 86400,

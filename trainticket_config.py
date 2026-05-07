@@ -69,6 +69,9 @@ EXP_NOISE_LIST = [0, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64]
 STAGE1_DEFAULTS = {
     'admit_self_spans':    False,    # F1b: drop self-edges (legacy)
     'admit_root_spans':    False,    # F1b: drop root spans (legacy)
+    'feature_selector':    'stderr', # F2a: legacy stderr_criteria
+    'fs_delta':            0.1,      # paper default delta_fs
+    'fs_floor':            0.0,      # paper-faithful (no extra guard)
     'baseline_window':     'global', # F2b: legacy single-window concatenated history
     'last_slot_seconds':   300,
     'last_period_seconds': 86400,
