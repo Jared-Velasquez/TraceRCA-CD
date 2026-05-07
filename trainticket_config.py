@@ -75,4 +75,5 @@ STAGE1_DEFAULTS = {
     'baseline_window':     'global', # F2b: legacy single-window concatenated history
     'last_slot_seconds':   300,
     'last_period_seconds': 86400,
+    'stage1_granularity':  'pair',   # per-op off
 }

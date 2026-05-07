@@ -182,19 +182,38 @@ def main(trace_history, invo_history, output_file,
 
     with open(invo_history, 'rb') as f:
         invo_history = pickle.load(f)
-    invo_history = invo_history.set_index(keys=['source', 'target'], drop=False).sort_index()
+    if stage1_granularity == 'operation':
+        idx_keys = ['source', 'target', 'callee_method']
+    else:
+        idx_keys = ['source', 'target']
+    invo_history = invo_history.set_index(keys=idx_keys, drop=False).sort_index()
     indices = np.unique(invo_history.index.values)
-    for source, target in indices:
-        reference = invo_history.loc[(source, target), FEATURE_NAMES].values
-        token = f"IF-{source}-{target}"
+    for key in indices:
+        if stage1_granularity == 'operation' and not isinstance(key, tuple):
+            key = tuple(key)
+        reference = invo_history.loc[key, FEATURE_NAMES].values
+        if stage1_granularity == 'operation':
+            src, tgt, method = key
+            token = f"IF-{src}-{tgt}-{method}"
+        else:
+            src, tgt = key
+            token = f"IF-{src}-{tgt}"
         model = IsolationForest(contamination=0.01, n_jobs=10)
         model.fit(reference)
         result[token] = model
 
-    for source, target in indices:
+    for key in indices:
+        if stage1_granularity == 'operation' and not isinstance(key, tuple):
+            key = tuple(key)
+        if stage1_granularity == 'operation':
+            src, tgt, method = key
+            kstr = f"{src}-{tgt}-{method}"
+        else:
+            src, tgt = key
+            kstr = f"{src}-{tgt}"
         for feature in FEATURE_NAMES:
-            reference = invo_history.loc[(source, target), feature].values
-            token = f"reference-{source}-{target}-{feature}-mean-variance"
+            reference = invo_history.loc[key, feature].values
+            token = f"reference-{kstr}-{feature}-mean-variance"
             result[token] = {
                 'mean': np.mean(reference[:]),
                 'std': np.maximum(np.std(reference[:]), 0.1)

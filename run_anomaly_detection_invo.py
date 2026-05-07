@@ -15,6 +15,14 @@ threshold = 1.0
 MIN_BASELINE_SAMPLES = 30
 
 
+def _key_str(key, granularity):
+    if granularity == 'operation':
+        src, tgt, method = key
+        return f"{src}-{tgt}-{method}"
+    src, tgt = key
+    return f"{src}-{tgt}"
+
+
 def _baseline_lookup(token, dual_cache, global_cache, min_samples):
     """
     Look up a baseline (mean, std) by token. Order:
@@ -29,44 +37,48 @@ def _baseline_lookup(token, dual_cache, global_cache, min_samples):
     return None
 
 
-def anomaly_detection_isolation_forest(df, result_column, history, cache):
+def anomaly_detection_isolation_forest(df, result_column, history, cache, granularity='pair'):
     indices = np.unique(df.index.values)
-    for source, target in indices:
-        empirical = df.loc[(source, target), FEATURE_NAMES].values
-        # reference = history.loc[(source, target), FEATURE_NAMES].values
-        token = f"IF-{source}-{target}"
+    for key in indices:
+        empirical = df.loc[key, FEATURE_NAMES].values
+        # IF cache lives in the global model file regardless of dual-window mode
+        token = f"IF-{_key_str(key, granularity)}"
         if token not in cache:
-            df.loc[(source, target), result_column] = 0
+            df.loc[key, result_column] = 0
             continue
         model = cache[token]
         predict = model.predict(empirical)
-        df.loc[(source, target), result_column] = predict
+        df.loc[key, result_column] = predict
     return df
 
 
 def anomaly_detection_3sigma_without_useful_features(df, result_column, history, cache,
-                                                    dual_cache=None,
+                                                    dual_cache=None, granularity='pair',
                                                     min_baseline_samples=MIN_BASELINE_SAMPLES):
     indices = np.unique(df.index.values)
     useful_feature = {key: FEATURE_NAMES for key in indices}
     return anomaly_detection_3sigma(df, result_column, None, useful_feature, cache=cache,
-                                   dual_cache=dual_cache,
+                                   dual_cache=dual_cache, granularity=granularity,
                                    min_baseline_samples=min_baseline_samples)
 
 
 def anomaly_detection_3sigma(df, result_column, history, useful_feature, cache,
-                             dual_cache=None,
+                             dual_cache=None, granularity='pair',
                              min_baseline_samples=MIN_BASELINE_SAMPLES):
     indices = np.unique(df.index.values)
-    for source, target in indices:
-        if (source, target) not in useful_feature:  # all features are not useful
-            df.loc[(source, target), result_column] = 0
+    for key in indices:
+        # Convert numpy array key (from triple-key index) to plain tuple
+        if granularity == 'operation' and not isinstance(key, tuple):
+            key = tuple(key)
+        if key not in useful_feature:  # all features are not useful
+            df.loc[key, result_column] = 0
             continue
-        features = useful_feature[(source, target)]
-        empirical = df.loc[(source, target), features].values
+        features = useful_feature[key]
+        empirical = df.loc[key, features].values
         mean, std = [], []
+        kstr = _key_str(key, granularity)
         for idx, feature in enumerate(features):
-            token = f"reference-{source}-{target}-{feature}-mean-variance"
+            token = f"reference-{kstr}-{feature}-mean-variance"
             looked_up = _baseline_lookup(token, dual_cache, cache, min_baseline_samples)
             if looked_up is not None:
                 mean.append(looked_up[0])
@@ -81,7 +93,7 @@ def anomaly_detection_3sigma(df, result_column, history, useful_feature, cache,
             predict[:, idx] = np.abs(empirical[:, idx] - mean[idx]) > threshold * std[idx]
         predict = np.max(predict, axis=1)
 
-        df.loc[(source, target), result_column] = predict
+        df.loc[key, result_column] = predict
     return df
 
 
@@ -95,10 +107,13 @@ def anomaly_detection_3sigma(df, result_column, history, useful_feature, cache,
 @click.option('--dual-cache', 'dual_cache_file', default='', type=str,
               help='F2b: per-case dual-window cache file (optional). '
                    'If provided, baselines are looked up there first; falls back to --cache.')
+@click.option('--stage1-granularity', type=click.Choice(['pair', 'operation']), default='pair',
+              help='Stage 1 keying: (source,target) or (source,target,callee_method).')
 @click.option('--min-baseline-samples', default=MIN_BASELINE_SAMPLES, type=int,
               help='[dual only] Min n in dual cache to use it; else fall back to global.')
 def invo_anomaly_detection_main(input_file, output_file, history, useful_feature, cache_file,
-                                main_threshold, dual_cache_file, min_baseline_samples):
+                                main_threshold, dual_cache_file, stage1_granularity,
+                                min_baseline_samples):
     global threshold
     threshold = main_threshold
 
@@ -117,10 +132,13 @@ def invo_anomaly_detection_main(input_file, output_file, history, useful_feature
 
     with open(input_file, 'rb') as f:
         df = pickle.load(f)
-    df = df.set_index(keys=['source', 'target'], drop=False).sort_index()
+    if stage1_granularity == 'operation':
+        df = df.set_index(keys=['source', 'target', 'callee_method'], drop=False).sort_index()
+    else:
+        df = df.set_index(keys=['source', 'target'], drop=False).sort_index()
     tic = time.time()
     df = anomaly_detection_3sigma(df, 'Ours-predict', None, useful_feature, cache=cache,
-                                  dual_cache=dual_cache,
+                                  dual_cache=dual_cache, granularity=stage1_granularity,
                                   min_baseline_samples=min_baseline_samples)
     toc = time.time()
     print("algo:", "ours", "time:", toc - tic, 'invos:', len(df))
@@ -134,12 +152,13 @@ def invo_anomaly_detection_main(input_file, output_file, history, useful_feature
 
     df = anomaly_detection_3sigma_without_useful_features(
         df, 'NoSelection-predict', None, cache=cache,
-        dual_cache=dual_cache,
+        dual_cache=dual_cache, granularity=stage1_granularity,
         min_baseline_samples=min_baseline_samples,
     )
 
     # tic = time.time()
-    df = anomaly_detection_isolation_forest(df, 'IF-predict', None, cache=cache)
+    df = anomaly_detection_isolation_forest(df, 'IF-predict', None, cache=cache,
+                                            granularity=stage1_granularity)
     # toc = time.time()
     # print("algo:", "IF", "time:", toc - tic, 'invos:', len(df))
 

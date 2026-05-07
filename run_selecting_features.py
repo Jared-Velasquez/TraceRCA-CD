@@ -79,9 +79,11 @@ def paper_criteria(empirical, reference, delta_fs, fs_floor=0.0):
               help='F2b: global=use --history pkl; dual=use --dual-cache pkl history field.')
 @click.option('--dual-cache', 'dual_cache_file', default='', type=str,
               help='[dual only] Per-case dual-window cache pkl produced by prepare_model dual mode.')
+@click.option('--stage1-granularity', type=click.Choice(['pair', 'operation']), default='pair',
+              help='Group by (source,target) [legacy] or (source,target,callee_method) [per-op].')
 def selecting_feature_main(input_file: str, output_file: str, history: str, fisher_threshold,
                            feature_selector, fs_delta, fs_floor,
-                           baseline_window, dual_cache_file):
+                           baseline_window, dual_cache_file, stage1_granularity):
     input_file = Path(input_file)
     output_file = Path(output_file)
 
@@ -97,49 +99,44 @@ def selecting_feature_main(input_file: str, output_file: str, history: str, fish
 
     with open(str(input_file), 'rb') as f:
         df = pickle.load(f)
-    df = df.set_index(keys=['source', 'target'], drop=True).sort_index()
-    history = history.set_index(keys=['source', 'target'], drop=True).sort_index()
+    if stage1_granularity == 'operation':
+        index_keys = ['source', 'target', 'callee_method']
+    else:
+        index_keys = ['source', 'target']
+    df = df.set_index(keys=index_keys, drop=True).sort_index()
+    history = history.set_index(keys=index_keys, drop=True).sort_index()
     indices = np.intersect1d(np.unique(df.index.values), np.unique(history.index.values))
     useful_features_dict = defaultdict(list)
     if DEBUG:
         plot_dir = output_file.parent / 'selecting_feature.debug'
         plot_dir.mkdir(exist_ok=True)
-    for (source, target), feature in tqdm(product(indices, FEATURE_NAMES)):
-        empirical = np.sort(df.loc[(source, target), feature].values)
-        reference = np.sort(history.loc[(source, target), feature].values)
-        # p_value = ks_2samp(
-        #     empirical, reference, alternative=ALTERNATIVE[feature]
-        # )[1]
+    for key, feature in tqdm(product(indices, FEATURE_NAMES)):
+        # Normalize key shape so dict lookup uses canonical tuples.
+        if stage1_granularity == 'operation' and not isinstance(key, tuple):
+            key = tuple(key)
+        empirical = np.sort(df.loc[key, feature].values)
+        reference = np.sort(history.loc[key, feature].values)
         p_value = -1
         if feature_selector == 'paper':
             fisher = paper_criteria(empirical, reference, fs_delta, fs_floor)
         else:
             fisher = stderr_criteria(empirical, reference, fisher_threshold)
-        # fisher = distribution_criteria(empirical, reference,fisher_threshold)
-        # if target == 'ts-station-service':
-        #    print(source,feature,fisher)
-        # fisher = fisher_criteria(empirical, reference, side=ALTERNATIVE[feature])
-        # if target == 'ts-food-service':
-        #     logger.debug(f"{source} {target} {feature} {fisher} "
-        #                  f"{np.mean(empirical)} {np.mean(reference)} {np.std(reference)}")
         if fisher:
-            useful_features_dict[(source, target)].append(feature)
+            useful_features_dict[key].append(feature)
         try:
             if DEBUG:
                 import matplotlib.pyplot as plt
                 from matplotlib.figure import Figure
                 fig = Figure(figsize=(4, 3))
-                # x = np.sort(np.concatenate([empirical, reference]))
-                # print('DEBUG:')
-                # print(empirical,reference)
                 sns.distplot(empirical, label='Empirical')
                 sns.distplot(reference, label='Reference')
                 plt.xlabel(feature)
                 plt.ylabel('PDF')
                 plt.legend()
-                plt.title(f"{source}->{target}, ks={p_value:.2f}, fisher={fisher:.2f}")
+                key_label = "_".join(map(str, key)) if isinstance(key, tuple) else str(key)
+                plt.title(f"{key_label}, ks={p_value:.2f}, fisher={fisher:.2f}")
                 plt.savefig(
-                    plot_dir / f"{input_file.name.split('.')[0]}_{source}_{target}_{feature}.pdf",
+                    plot_dir / f"{input_file.name.split('.')[0]}_{key_label}_{feature}.pdf",
                     bbox_inches='tight', pad_inches=0
                 )
         except:
