@@ -28,7 +28,8 @@ PREDICT_COLUMN = 'predict'
 def inject_noise(df, ratio=0):
     rng = np.random.default_rng(2021)
     df = df.copy()
-    df = df.drop(columns=['source', 'target']).reset_index()
+    extra_idx = [c for c in (df.index.names or []) if c and c in df.columns]
+    df = df.drop(columns=['source', 'target'] + extra_idx).reset_index()
     for idx in range(len(df)):
         if rng.random() < ratio:
             df.loc[idx, PREDICT_COLUMN] = 1 - df.iloc[idx][PREDICT_COLUMN]

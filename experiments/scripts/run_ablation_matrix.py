@@ -119,7 +119,13 @@ def main():
     selected = args.cells or list(cells.keys())
     invo_dir = Path(args.invo_dir)
 
-    case_files = sorted(invo_dir.glob('*.invo.pkl'))
+    # Test (anomalous) per-case pkls are <case>.invo.pkl. Normal pre-fault
+    # pkls are <case>.normal.invo.pkl and the global concat is
+    # trainticket_historical_normal.invo.pkl — neither belongs in the ablation
+    # case list (they're baseline inputs, not Stage 1 evaluation inputs).
+    case_files = sorted(p for p in invo_dir.glob('*.invo.pkl')
+                        if not p.name.endswith('.normal.invo.pkl')
+                        and not p.name.startswith('trainticket_historical_'))
     if args.cases:
         wanted = set(args.cases)
         case_files = [p for p in case_files if p.stem.replace('.invo', '') in wanted
