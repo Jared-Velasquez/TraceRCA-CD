@@ -1,0 +1,37 @@
+# TraceRCA-CD runtime + experiment tooling.
+#
+# CRITICAL PINS — do not relax without rebuilding output/trainticket_anomaly_detection.models.0.0:
+#
+#   scikit-learn==1.7.2   The Stage 1 baseline cache was originally pickled under sklearn 1.8.0,
+#                         which used an MT19937 BitGenerator import path that no longer exists in
+#                         1.7.x. That mismatch is the TraceRCA-CD <-> RCAEval-Fork gap documented in
+#                         experiments/2026-05-08_re2tt_gap_closure.md. The cache has since been
+#                         regenerated under 1.7.2; bumping sklearn back to 1.8.x will reintroduce
+#                         the unpickle failure unless the cache is rebuilt again.
+#   numpy==1.26.4         Pinned together with sklearn 1.7.2 — numpy 2.x changes random-state ABI
+#                         and breaks the regenerated cache. RCAEval-Fork also enforces numpy<2.
+#   scipy / pandas /      Interact with the sklearn 1.7 pickle ABI (IsolationForest, RandomForest,
+#   mlxtend               KNN, MLP estimators) and with the FP-Growth output schema. Pinned to the
+#                         versions the working baseline (RE2-TT Top-1 0.644) was produced under.
+
+# --- Stage 1 detector / Stage 2 mining (pkl-cache-sensitive: pin exactly) ---
+scikit-learn==1.7.2
+numpy==1.26.4
+scipy==1.14.1
+pandas==2.3.3
+mlxtend==0.23.4
+imbalanced-learn==0.14.1
+
+# --- Numerics / caching (ABI-adjacent: pin exactly) ---
+numba==0.65.1
+diskcache==5.6.1
+
+# --- Plotting (loose: figure output only) ---
+matplotlib>=3.9
+seaborn>=0.12
+
+# --- CLI / logging / IO (loose) ---
+click>=8.1
+loguru>=0.7
+tqdm>=4.65
+PyYAML>=6.0

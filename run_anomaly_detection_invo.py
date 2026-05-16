@@ -1,3 +1,4 @@
+import importlib
 import pickle
 import time
 from pathlib import Path
@@ -6,8 +7,9 @@ import click
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from loguru import logger
-from trainticket_config import FEATURE_NAMES
 from diskcache import Cache
+
+FEATURE_NAMES = None  # set by main() based on --dataset
 
 DEBUG = True
 
@@ -111,11 +113,17 @@ def anomaly_detection_3sigma(df, result_column, history, useful_feature, cache,
               help='Stage 1 keying: (source,target) or (source,target,callee_method).')
 @click.option('--min-baseline-samples', default=MIN_BASELINE_SAMPLES, type=int,
               help='[dual only] Min n in dual cache to use it; else fall back to global.')
+@click.option('--dataset', type=click.Choice(['tt', 'ob']), default='tt',
+              help='Dataset config to load FEATURE_NAMES from.')
 def invo_anomaly_detection_main(input_file, output_file, history, useful_feature, cache_file,
                                 main_threshold, dual_cache_file, stage1_granularity,
-                                min_baseline_samples):
-    global threshold
+                                min_baseline_samples, dataset):
+    global threshold, FEATURE_NAMES
     threshold = main_threshold
+    cfg = importlib.import_module(
+        'trainticket_config' if dataset == 'tt' else 'onlineboutique_config'
+    )
+    FEATURE_NAMES = cfg.FEATURE_NAMES
 
     history = None
     with open(useful_feature, 'r') as f:

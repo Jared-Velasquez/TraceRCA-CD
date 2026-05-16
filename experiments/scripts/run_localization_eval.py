@@ -79,6 +79,64 @@ def stage23_for_cell(cell_dir: Path, alpha: float, support: float, k: int,
     return n_ok, n_fail
 
 
+def stage23_for_alpha(invo_cell_dir: Path, alpha_out_dir: Path, alpha: float,
+                      support: float, k: int, log_dir: Path) -> tuple[int, int]:
+    """
+    α-sweep variant: read each case's invo.result.pkl from `invo_cell_dir/<case>/`
+    (typically baseline_0000), but write Stage 2/3 outputs (and per-α mechanism JSON)
+    to `alpha_out_dir/<case>/`.
+    """
+    case_dirs = sorted(p for p in invo_cell_dir.iterdir()
+                       if p.is_dir() and p.name != 'logs'
+                       and (p / 'invo.result.pkl').exists())
+    n_ok = 0
+    n_fail = 0
+    alpha_out_dir.mkdir(parents=True, exist_ok=True)
+    for case_dir in case_dirs:
+        case_id = case_dir.name
+        invo_in = case_dir / 'invo.result.pkl'
+        case_out_dir = alpha_out_dir / case_id
+        case_out_dir.mkdir(parents=True, exist_ok=True)
+        s23_out = case_out_dir / f'{case_id}.association_rule_mining.result.pkl.{support}.{k}'
+
+        if s23_out.exists() and s23_out.stat().st_size > 0:
+            n_ok += 1
+            continue
+
+        cmd = [
+            sys.executable, str(LOCALIZATION_RUNNER),
+            '-i', str(invo_in),
+            '-o', str(s23_out),
+            '--min-support-rate', str(support),
+            '--caller-discount-alpha', str(alpha),
+            '-q',
+        ]
+        rc = run(cmd, log=log_dir / f'{case_id}.s23.log')
+        if rc != 0:
+            n_fail += 1
+            print(f'    [FAIL] {case_id}: rc={rc}', file=sys.stderr)
+        else:
+            n_ok += 1
+    return n_ok, n_fail
+
+
+def collect_for_alpha_dir(alpha_out_dir: Path, support: float, k: int,
+                          log_path: Path) -> Path | None:
+    """Like collect_for_cell but for an α-sweep alpha dir."""
+    s23_files = sorted(alpha_out_dir.rglob(
+        f'*.association_rule_mining.result.pkl.{support}.{k}'))
+    if not s23_files:
+        print(f'  no Stage 2/3 outputs in {alpha_out_dir}', file=sys.stderr)
+        return None
+    eval_csv = alpha_out_dir / 'eval.csv'
+    cmd = [sys.executable, str(COLLECT_RUNNER)]
+    for f in s23_files:
+        cmd += ['-i', str(f)]
+    cmd += ['-o', str(eval_csv)]
+    rc = run(cmd, log=log_path)
+    return eval_csv if rc == 0 else None
+
+
 def collect_for_cell(cell_dir: Path, support: float, k: int,
                      log_path: Path) -> Path | None:
     """Run run_localization_collect.py for a cell. Returns eval.csv path or None."""
@@ -150,12 +208,27 @@ def main():
     ap.add_argument('--alpha', type=float, default=0.0)
     ap.add_argument('--support', type=float, default=0.05)
     ap.add_argument('--k', type=int, default=100)
+    ap.add_argument('--alpha-sweep', default=None,
+                    help='Comma-separated α values, e.g. "0,0.1,0.3,0.5,0.8". '
+                         'Switches to α-sweep mode: per-α Stage 2/3 outputs go to '
+                         '<sweep-out-root>/alpha_<α>/<case>/ reading invo pkls from '
+                         'baseline_0000 (or --sweep-source-cell). Writes a cross-α '
+                         'summary CSV at <sweep-out-root>/alpha_summary.csv.')
+    ap.add_argument('--sweep-out-root', default=None,
+                    help='[--alpha-sweep only] Output root. Default: '
+                         '<repo>/experiments/candidate_b_alpha_sweep')
+    ap.add_argument('--sweep-source-cell', default='baseline_0000',
+                    help='[--alpha-sweep only] Cell whose invo.result.pkl files feed '
+                         'every α run. Default: baseline_0000.')
     args = ap.parse_args()
 
     ablation_root = Path(args.ablation_dir)
     if not ablation_root.exists():
         print(f'No ablation root at {ablation_root}', file=sys.stderr)
         sys.exit(2)
+
+    if args.alpha_sweep:
+        return run_alpha_sweep(args, ablation_root)
 
     t0 = time.time()
     summary_records = []
@@ -210,6 +283,68 @@ def main():
                   f"{r.get('n_cases', 0)}")
 
     print(f'\nPhase 4 complete in {int(time.time() - t0)}s')
+
+
+def run_alpha_sweep(args, ablation_root: Path):
+    """Iterate Stage 2/3 + collect over α values, reading invo pkls from a single cell."""
+    alphas = [float(x.strip()) for x in args.alpha_sweep.split(',') if x.strip()]
+    invo_cell_dir = ablation_root / args.sweep_source_cell
+    if not invo_cell_dir.exists():
+        print(f'No source cell at {invo_cell_dir}', file=sys.stderr)
+        sys.exit(2)
+    sweep_root = (Path(args.sweep_out_root) if args.sweep_out_root
+                  else REPO_ROOT / 'experiments' / 'candidate_b_alpha_sweep')
+    sweep_root.mkdir(parents=True, exist_ok=True)
+
+    t0 = time.time()
+    summary_records = []
+
+    for alpha in alphas:
+        alpha_tag = f'alpha_{alpha}'
+        alpha_out_dir = sweep_root / alpha_tag
+        log_dir = alpha_out_dir / 'logs'
+        log_dir.mkdir(parents=True, exist_ok=True)
+
+        print(f'\n[{alpha_tag}] Stage 2/3 (t+{time.time()-t0:.0f}s)')
+        n_ok, n_fail = stage23_for_alpha(invo_cell_dir, alpha_out_dir, alpha,
+                                          args.support, args.k, log_dir)
+        print(f'  S23 ok={n_ok} fail={n_fail}')
+
+        print(f'[{alpha_tag}] collect (t+{time.time()-t0:.0f}s)')
+        eval_csv = collect_for_alpha_dir(alpha_out_dir, args.support, args.k,
+                                          log_dir / 'collect.log')
+        if eval_csv is None:
+            print(f'  collect failed', file=sys.stderr)
+            continue
+        s = summarize_cell(eval_csv)
+        s['alpha'] = alpha
+        s['n_cases'] = n_ok
+        summary_records.append(s)
+        print(f"  HR@1={s.get('A@1', float('nan')):.3f} "
+              f"HR@3={s.get('A@3', float('nan')):.3f} "
+              f"MAR={s.get('MAR', float('nan')):.3f} "
+              f"MFR={s.get('MFR', float('nan')):.3f}")
+
+    summary_csv = sweep_root / 'alpha_summary.csv'
+    if summary_records:
+        import csv
+        cols = ['alpha', 'method', 'n_cases', 'A@1', 'A@2', 'A@3', 'MAR', 'MFR']
+        with open(summary_csv, 'w', newline='') as f:
+            w = csv.DictWriter(f, fieldnames=cols, extrasaction='ignore')
+            w.writeheader()
+            for r in summary_records:
+                w.writerow(r)
+        print(f'\nSummary: {summary_csv}')
+        print(f'\n{"alpha":>6} {"HR@1":>7} {"HR@3":>7} {"MAR":>7} {"MFR":>7} n')
+        for r in summary_records:
+            print(f"{r['alpha']:>6.2f} "
+                  f"{r.get('A@1', float('nan')):>7.3f} "
+                  f"{r.get('A@3', float('nan')):>7.3f} "
+                  f"{r.get('MAR', float('nan')):>7.3f} "
+                  f"{r.get('MFR', float('nan')):>7.3f} "
+                  f"{r.get('n_cases', 0)}")
+
+    print(f'\nα sweep complete in {int(time.time() - t0)}s')
 
 
 if __name__ == '__main__':

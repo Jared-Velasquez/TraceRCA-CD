@@ -25,6 +25,11 @@ cells:
     description: "Off-switch parity check. All flags neutral."
     overrides: {}
 
+  ob_baseline_0000:
+    description: "OB off-switch baseline (RE2-OB equivalent of baseline_0000)."
+    overrides:
+      dataset: ob
+
   f1b_only:
     description: "F1b: admit self-spans and root spans (auth-slice fix)."
     overrides:

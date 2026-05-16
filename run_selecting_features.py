@@ -1,3 +1,4 @@
+import importlib
 import pickle
 from collections import defaultdict
 from itertools import product
@@ -9,7 +10,8 @@ import seaborn as sns
 from loguru import logger
 from tqdm import tqdm
 from pprint import pprint
-from trainticket_config import FEATURE_NAMES
+
+FEATURE_NAMES = None  # set by main() based on --dataset
 
 DEBUG = False  # very slow
 
@@ -81,9 +83,16 @@ def paper_criteria(empirical, reference, delta_fs, fs_floor=0.0):
               help='[dual only] Per-case dual-window cache pkl produced by prepare_model dual mode.')
 @click.option('--stage1-granularity', type=click.Choice(['pair', 'operation']), default='pair',
               help='Group by (source,target) [legacy] or (source,target,callee_method) [per-op].')
+@click.option('--dataset', type=click.Choice(['tt', 'ob']), default='tt',
+              help='Dataset config to load FEATURE_NAMES from.')
 def selecting_feature_main(input_file: str, output_file: str, history: str, fisher_threshold,
                            feature_selector, fs_delta, fs_floor,
-                           baseline_window, dual_cache_file, stage1_granularity):
+                           baseline_window, dual_cache_file, stage1_granularity, dataset):
+    global FEATURE_NAMES
+    cfg = importlib.import_module(
+        'trainticket_config' if dataset == 'tt' else 'onlineboutique_config'
+    )
+    FEATURE_NAMES = cfg.FEATURE_NAMES
     input_file = Path(input_file)
     output_file = Path(output_file)
 

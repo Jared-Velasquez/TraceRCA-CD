@@ -1,1002 +1,545 @@
 {
   "cells_run": [
-    "f1b_perop",
-    "all_on"
+    "ob_baseline_0000"
   ],
   "cases_run": [
-    "ts-auth-service_cpu_1.invo.pkl",
-    "ts-auth-service_cpu_2.invo.pkl",
-    "ts-auth-service_cpu_3.invo.pkl",
-    "ts-auth-service_delay_1.invo.pkl",
-    "ts-auth-service_delay_2.invo.pkl",
-    "ts-auth-service_delay_3.invo.pkl",
-    "ts-auth-service_disk_1.invo.pkl",
-    "ts-auth-service_disk_2.invo.pkl",
-    "ts-auth-service_disk_3.invo.pkl",
-    "ts-auth-service_loss_1.invo.pkl",
-    "ts-auth-service_loss_2.invo.pkl",
-    "ts-auth-service_loss_3.invo.pkl",
-    "ts-auth-service_mem_1.invo.pkl",
-    "ts-auth-service_mem_2.invo.pkl",
-    "ts-auth-service_mem_3.invo.pkl",
-    "ts-auth-service_socket_1.invo.pkl",
-    "ts-auth-service_socket_2.invo.pkl",
-    "ts-auth-service_socket_3.invo.pkl",
-    "ts-order-service_cpu_1.invo.pkl",
-    "ts-order-service_cpu_2.invo.pkl",
-    "ts-order-service_cpu_3.invo.pkl",
-    "ts-order-service_delay_1.invo.pkl",
-    "ts-order-service_delay_2.invo.pkl",
-    "ts-order-service_delay_3.invo.pkl",
-    "ts-order-service_disk_1.invo.pkl",
-    "ts-order-service_disk_2.invo.pkl",
-    "ts-order-service_disk_3.invo.pkl",
-    "ts-order-service_loss_1.invo.pkl",
-    "ts-order-service_loss_2.invo.pkl",
-    "ts-order-service_loss_3.invo.pkl",
-    "ts-order-service_mem_1.invo.pkl",
-    "ts-order-service_mem_2.invo.pkl",
-    "ts-order-service_mem_3.invo.pkl",
-    "ts-order-service_socket_1.invo.pkl",
-    "ts-order-service_socket_2.invo.pkl",
-    "ts-order-service_socket_3.invo.pkl",
-    "ts-route-service_cpu_1.invo.pkl",
-    "ts-route-service_cpu_2.invo.pkl",
-    "ts-route-service_cpu_3.invo.pkl",
-    "ts-route-service_delay_1.invo.pkl",
-    "ts-route-service_delay_2.invo.pkl",
-    "ts-route-service_delay_3.invo.pkl",
-    "ts-route-service_disk_1.invo.pkl",
-    "ts-route-service_disk_2.invo.pkl",
-    "ts-route-service_disk_3.invo.pkl",
-    "ts-route-service_loss_1.invo.pkl",
-    "ts-route-service_loss_2.invo.pkl",
-    "ts-route-service_loss_3.invo.pkl",
-    "ts-route-service_mem_1.invo.pkl",
-    "ts-route-service_mem_2.invo.pkl",
-    "ts-route-service_mem_3.invo.pkl",
-    "ts-route-service_socket_1.invo.pkl",
-    "ts-route-service_socket_2.invo.pkl",
-    "ts-route-service_socket_3.invo.pkl",
-    "ts-train-service_cpu_1.invo.pkl",
-    "ts-train-service_cpu_2.invo.pkl",
-    "ts-train-service_cpu_3.invo.pkl",
-    "ts-train-service_delay_1.invo.pkl",
-    "ts-train-service_delay_2.invo.pkl",
-    "ts-train-service_delay_3.invo.pkl",
-    "ts-train-service_disk_1.invo.pkl",
-    "ts-train-service_disk_2.invo.pkl",
-    "ts-train-service_disk_3.invo.pkl",
-    "ts-train-service_loss_1.invo.pkl",
-    "ts-train-service_loss_2.invo.pkl",
-    "ts-train-service_loss_3.invo.pkl",
-    "ts-train-service_mem_1.invo.pkl",
-    "ts-train-service_mem_2.invo.pkl",
-    "ts-train-service_mem_3.invo.pkl",
-    "ts-train-service_socket_1.invo.pkl",
-    "ts-train-service_socket_2.invo.pkl",
-    "ts-train-service_socket_3.invo.pkl",
-    "ts-travel-service_cpu_1.invo.pkl",
-    "ts-travel-service_cpu_2.invo.pkl",
-    "ts-travel-service_cpu_3.invo.pkl",
-    "ts-travel-service_delay_1.invo.pkl",
-    "ts-travel-service_delay_2.invo.pkl",
-    "ts-travel-service_delay_3.invo.pkl",
-    "ts-travel-service_disk_1.invo.pkl",
-    "ts-travel-service_disk_2.invo.pkl",
-    "ts-travel-service_disk_3.invo.pkl",
-    "ts-travel-service_loss_1.invo.pkl",
-    "ts-travel-service_loss_2.invo.pkl",
-    "ts-travel-service_loss_3.invo.pkl",
-    "ts-travel-service_mem_1.invo.pkl",
-    "ts-travel-service_mem_2.invo.pkl",
-    "ts-travel-service_mem_3.invo.pkl",
-    "ts-travel-service_socket_1.invo.pkl",
-    "ts-travel-service_socket_2.invo.pkl",
-    "ts-travel-service_socket_3.invo.pkl"
+    "checkoutservice_cpu_1.invo.pkl",
+    "checkoutservice_cpu_3.invo.pkl",
+    "checkoutservice_delay_1.invo.pkl",
+    "checkoutservice_delay_2.invo.pkl",
+    "checkoutservice_delay_3.invo.pkl",
+    "checkoutservice_disk_1.invo.pkl",
+    "checkoutservice_disk_2.invo.pkl",
+    "checkoutservice_disk_3.invo.pkl",
+    "checkoutservice_loss_1.invo.pkl",
+    "checkoutservice_loss_2.invo.pkl",
+    "checkoutservice_loss_3.invo.pkl",
+    "checkoutservice_mem_1.invo.pkl",
+    "checkoutservice_mem_2.invo.pkl",
+    "checkoutservice_mem_3.invo.pkl",
+    "checkoutservice_socket_1.invo.pkl",
+    "checkoutservice_socket_2.invo.pkl",
+    "checkoutservice_socket_3.invo.pkl",
+    "currencyservice_cpu_1.invo.pkl",
+    "currencyservice_cpu_2.invo.pkl",
+    "currencyservice_cpu_3.invo.pkl",
+    "currencyservice_delay_1.invo.pkl",
+    "currencyservice_delay_2.invo.pkl",
+    "currencyservice_delay_3.invo.pkl",
+    "currencyservice_disk_1.invo.pkl",
+    "currencyservice_disk_2.invo.pkl",
+    "currencyservice_disk_3.invo.pkl",
+    "currencyservice_loss_1.invo.pkl",
+    "currencyservice_loss_2.invo.pkl",
+    "currencyservice_loss_3.invo.pkl",
+    "currencyservice_mem_1.invo.pkl",
+    "currencyservice_mem_2.invo.pkl",
+    "currencyservice_mem_3.invo.pkl",
+    "currencyservice_socket_1.invo.pkl",
+    "currencyservice_socket_2.invo.pkl",
+    "currencyservice_socket_3.invo.pkl",
+    "emailservice_cpu_1.invo.pkl",
+    "emailservice_cpu_2.invo.pkl",
+    "emailservice_cpu_3.invo.pkl",
+    "emailservice_delay_1.invo.pkl",
+    "emailservice_delay_2.invo.pkl",
+    "emailservice_delay_3.invo.pkl",
+    "emailservice_disk_1.invo.pkl",
+    "emailservice_disk_2.invo.pkl",
+    "emailservice_disk_3.invo.pkl",
+    "emailservice_loss_1.invo.pkl",
+    "emailservice_loss_2.invo.pkl",
+    "emailservice_loss_3.invo.pkl",
+    "emailservice_mem_1.invo.pkl",
+    "emailservice_mem_2.invo.pkl",
+    "emailservice_mem_3.invo.pkl",
+    "emailservice_socket_1.invo.pkl",
+    "emailservice_socket_2.invo.pkl",
+    "emailservice_socket_3.invo.pkl",
+    "productcatalogservice_cpu_1.invo.pkl",
+    "productcatalogservice_cpu_2.invo.pkl",
+    "productcatalogservice_cpu_3.invo.pkl",
+    "productcatalogservice_delay_1.invo.pkl",
+    "productcatalogservice_delay_2.invo.pkl",
+    "productcatalogservice_delay_3.invo.pkl",
+    "productcatalogservice_disk_1.invo.pkl",
+    "productcatalogservice_disk_2.invo.pkl",
+    "productcatalogservice_disk_3.invo.pkl",
+    "productcatalogservice_loss_1.invo.pkl",
+    "productcatalogservice_loss_2.invo.pkl",
+    "productcatalogservice_loss_3.invo.pkl",
+    "productcatalogservice_mem_1.invo.pkl",
+    "productcatalogservice_mem_2.invo.pkl",
+    "productcatalogservice_mem_3.invo.pkl",
+    "productcatalogservice_socket_1.invo.pkl",
+    "productcatalogservice_socket_2.invo.pkl",
+    "productcatalogservice_socket_3.invo.pkl",
+    "recommendationservice_cpu_1.invo.pkl",
+    "recommendationservice_cpu_2.invo.pkl",
+    "recommendationservice_cpu_3.invo.pkl",
+    "recommendationservice_delay_1.invo.pkl",
+    "recommendationservice_delay_2.invo.pkl",
+    "recommendationservice_delay_3.invo.pkl",
+    "recommendationservice_disk_1.invo.pkl",
+    "recommendationservice_disk_2.invo.pkl",
+    "recommendationservice_disk_3.invo.pkl",
+    "recommendationservice_loss_1.invo.pkl",
+    "recommendationservice_loss_2.invo.pkl",
+    "recommendationservice_loss_3.invo.pkl",
+    "recommendationservice_mem_1.invo.pkl",
+    "recommendationservice_mem_2.invo.pkl",
+    "recommendationservice_mem_3.invo.pkl",
+    "recommendationservice_socket_1.invo.pkl",
+    "recommendationservice_socket_2.invo.pkl",
+    "recommendationservice_socket_3.invo.pkl"
   ],
   "config_file": "/home/jaredvel25/TraceRCA-CD/experiments/configs/stage1_paper.yaml",
   "entries": [
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_cpu_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_cpu_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_cpu_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_cpu_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_cpu_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_cpu_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_cpu_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_cpu_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_cpu_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_cpu_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_delay_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_delay_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_delay_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_delay_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_delay_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_delay_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_delay_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_delay_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_delay_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_delay_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_delay_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_delay_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_disk_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_disk_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_disk_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_disk_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_disk_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_disk_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_disk_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_disk_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_disk_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_disk_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_disk_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_disk_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_loss_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_loss_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_loss_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_loss_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_loss_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_loss_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_loss_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_loss_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_loss_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_loss_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_loss_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_loss_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_mem_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_mem_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_mem_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_mem_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_mem_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_mem_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_mem_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_mem_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_mem_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_mem_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_mem_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_mem_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_socket_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_socket_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_socket_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_socket_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_socket_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_socket_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_socket_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_socket_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "checkoutservice_socket_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/checkoutservice_socket_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-auth-service_socket_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-auth-service_socket_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_cpu_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_cpu_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_cpu_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_cpu_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_cpu_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_cpu_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_cpu_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_cpu_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_cpu_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_cpu_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_cpu_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_cpu_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_delay_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_delay_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_delay_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_delay_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_delay_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_delay_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_delay_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_delay_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_delay_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_delay_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_delay_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_delay_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_disk_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_disk_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_disk_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_disk_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_disk_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_disk_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_disk_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_disk_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_disk_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_disk_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_disk_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_disk_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_loss_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_loss_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_loss_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_loss_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_loss_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_loss_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_loss_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_loss_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_loss_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_loss_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_loss_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_loss_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_mem_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_mem_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_mem_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_mem_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_mem_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_mem_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_mem_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_mem_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_mem_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_mem_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_mem_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_mem_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_socket_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_socket_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_socket_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_socket_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_socket_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_socket_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_socket_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_socket_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "currencyservice_socket_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/currencyservice_socket_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-order-service_socket_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-order-service_socket_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_cpu_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_cpu_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_cpu_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_cpu_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_cpu_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_cpu_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_cpu_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_cpu_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_cpu_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_cpu_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_cpu_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_cpu_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_delay_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_delay_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_delay_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_delay_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_delay_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_delay_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_delay_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_delay_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_delay_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_delay_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_delay_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_delay_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_disk_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_disk_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_disk_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_disk_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_disk_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_disk_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_disk_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_disk_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_disk_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_disk_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_disk_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_disk_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_loss_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_loss_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_loss_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_loss_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_loss_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_loss_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_loss_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_loss_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_loss_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_loss_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_loss_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_loss_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_mem_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_mem_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_mem_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_mem_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_mem_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_mem_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_mem_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_mem_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_mem_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_mem_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_mem_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_mem_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_socket_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_socket_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_socket_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_socket_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_socket_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_socket_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_socket_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_socket_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "emailservice_socket_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/emailservice_socket_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-route-service_socket_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-route-service_socket_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_cpu_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_cpu_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_cpu_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_cpu_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_cpu_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_cpu_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_cpu_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_cpu_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_cpu_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_cpu_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_cpu_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_cpu_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_delay_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_delay_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_delay_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_delay_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_delay_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_delay_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_delay_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_delay_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_delay_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_delay_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_delay_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_delay_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_disk_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_disk_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_disk_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_disk_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_disk_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_disk_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_disk_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_disk_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_disk_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_disk_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_disk_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_disk_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_loss_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_loss_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_loss_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_loss_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_loss_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_loss_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_loss_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_loss_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_loss_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_loss_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_loss_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_loss_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_mem_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_mem_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_mem_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_mem_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_mem_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_mem_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_mem_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_mem_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_mem_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_mem_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_mem_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_mem_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_socket_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_socket_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_socket_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_socket_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_socket_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_socket_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_socket_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_socket_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "productcatalogservice_socket_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/productcatalogservice_socket_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-train-service_socket_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-train-service_socket_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_cpu_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_cpu_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_cpu_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_cpu_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_cpu_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_cpu_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_cpu_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_cpu_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_cpu_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_cpu_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_cpu_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_cpu_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_delay_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_delay_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_delay_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_delay_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_delay_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_delay_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_delay_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_delay_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_delay_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_delay_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_delay_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_delay_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_disk_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_disk_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_disk_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_disk_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_disk_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_disk_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_disk_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_disk_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_disk_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_disk_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_disk_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_disk_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_loss_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_loss_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_loss_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_loss_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_loss_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_loss_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_loss_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_loss_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_loss_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_loss_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_loss_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_loss_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_mem_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_mem_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_mem_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_mem_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_mem_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_mem_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_mem_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_mem_2/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_mem_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_mem_3/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_mem_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_mem_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_socket_1",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_socket_1/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_socket_1",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_socket_1/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_socket_2",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_socket_2/invo.result.pkl"
     },
     {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_socket_2",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_socket_2/invo.result.pkl"
-    },
-    {
-      "cell": "f1b_perop",
-      "case": "ts-travel-service_socket_3",
-      "invo_result": "experiments/ablation/f1b_perop/ts-travel-service_socket_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_cpu_1",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_cpu_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_cpu_2",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_cpu_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_cpu_3",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_cpu_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_delay_1",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_delay_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_delay_2",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_delay_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_delay_3",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_delay_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_disk_1",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_disk_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_disk_2",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_disk_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_disk_3",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_disk_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_loss_1",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_loss_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_loss_2",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_loss_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_loss_3",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_loss_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_mem_1",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_mem_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_mem_2",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_mem_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_mem_3",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_mem_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_socket_1",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_socket_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_socket_2",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_socket_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-auth-service_socket_3",
-      "invo_result": "experiments/ablation/all_on/ts-auth-service_socket_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_cpu_1",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_cpu_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_cpu_2",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_cpu_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_cpu_3",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_cpu_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_delay_1",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_delay_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_delay_2",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_delay_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_delay_3",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_delay_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_disk_1",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_disk_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_disk_2",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_disk_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_disk_3",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_disk_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_loss_1",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_loss_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_loss_2",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_loss_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_loss_3",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_loss_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_mem_1",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_mem_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_mem_2",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_mem_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_mem_3",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_mem_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_socket_1",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_socket_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_socket_2",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_socket_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-order-service_socket_3",
-      "invo_result": "experiments/ablation/all_on/ts-order-service_socket_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_cpu_1",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_cpu_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_cpu_2",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_cpu_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_cpu_3",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_cpu_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_delay_1",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_delay_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_delay_2",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_delay_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_delay_3",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_delay_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_disk_1",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_disk_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_disk_2",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_disk_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_disk_3",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_disk_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_loss_1",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_loss_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_loss_2",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_loss_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_loss_3",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_loss_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_mem_1",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_mem_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_mem_2",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_mem_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_mem_3",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_mem_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_socket_1",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_socket_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_socket_2",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_socket_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-route-service_socket_3",
-      "invo_result": "experiments/ablation/all_on/ts-route-service_socket_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_cpu_1",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_cpu_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_cpu_2",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_cpu_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_cpu_3",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_cpu_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_delay_1",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_delay_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_delay_2",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_delay_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_delay_3",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_delay_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_disk_1",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_disk_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_disk_2",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_disk_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_disk_3",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_disk_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_loss_1",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_loss_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_loss_2",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_loss_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_loss_3",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_loss_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_mem_1",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_mem_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_mem_2",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_mem_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_mem_3",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_mem_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_socket_1",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_socket_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_socket_2",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_socket_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-train-service_socket_3",
-      "invo_result": "experiments/ablation/all_on/ts-train-service_socket_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_cpu_1",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_cpu_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_cpu_2",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_cpu_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_cpu_3",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_cpu_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_delay_1",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_delay_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_delay_2",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_delay_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_delay_3",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_delay_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_disk_1",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_disk_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_disk_2",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_disk_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_disk_3",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_disk_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_loss_1",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_loss_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_loss_2",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_loss_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_loss_3",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_loss_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_mem_1",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_mem_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_mem_2",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_mem_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_mem_3",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_mem_3/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_socket_1",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_socket_1/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_socket_2",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_socket_2/invo.result.pkl"
-    },
-    {
-      "cell": "all_on",
-      "case": "ts-travel-service_socket_3",
-      "invo_result": "experiments/ablation/all_on/ts-travel-service_socket_3/invo.result.pkl"
+      "cell": "ob_baseline_0000",
+      "case": "recommendationservice_socket_3",
+      "invo_result": "/home/jaredvel25/TraceRCA-CD/experiments/ablation/ob_baseline_0000/recommendationservice_socket_3/invo.result.pkl"
     }
   ],
-  "timestamp": "2026-05-08T00:56:56"
+  "timestamp": "2026-05-16T15:55:57"
 }

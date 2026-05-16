@@ -71,14 +71,17 @@ def cell_args_for(script: str, cell: dict) -> list[str]:
         a += ['--fs-floor', str(cell.get('fs_floor', 0.0))]
         a += ['--baseline-window', cell.get('baseline_window', 'global')]
         a += ['--stage1-granularity', cell.get('stage1_granularity', 'pair')]
+        a += ['--dataset', cell.get('dataset', 'tt')]
     elif script == 'run_anomaly_detection_invo.py':
         a += ['--stage1-granularity', cell.get('stage1_granularity', 'pair')]
         a += ['--min-baseline-samples', str(cell.get('min_baseline_samples', 30))]
+        a += ['--dataset', cell.get('dataset', 'tt')]
     elif script == 'run_anomaly_detection_prepare_model.py':
         a += ['--baseline-window', cell.get('baseline_window', 'global')]
         a += ['--stage1-granularity', cell.get('stage1_granularity', 'pair')]
         a += ['--last-slot-seconds', str(cell.get('last_slot_seconds', 300))]
         a += ['--last-period-seconds', str(cell.get('last_period_seconds', 86400))]
+        a += ['--dataset', cell.get('dataset', 'tt')]
     return a
 
 
@@ -125,7 +128,8 @@ def main():
     # case list (they're baseline inputs, not Stage 1 evaluation inputs).
     case_files = sorted(p for p in invo_dir.glob('*.invo.pkl')
                         if not p.name.endswith('.normal.invo.pkl')
-                        and not p.name.startswith('trainticket_historical_'))
+                        and not p.name.startswith('trainticket_historical_')
+                        and '_historical_normal' not in p.name)
     if args.cases:
         wanted = set(args.cases)
         case_files = [p for p in case_files if p.stem.replace('.invo', '') in wanted
@@ -185,6 +189,7 @@ def main():
                        '--last-slot-seconds', str(cell['last_slot_seconds']),
                        '--last-period-seconds', str(cell['last_period_seconds']),
                        '--stage1-granularity', cell['stage1_granularity'],
+                       '--dataset', cell.get('dataset', 'tt'),
                        '-o', dual_cache_path]
                 if args.dry_run:
                     print('DRY:', ' '.join(cmd))
@@ -204,7 +209,8 @@ def main():
                    '--fs-delta', str(cell['fs_delta']),
                    '--fs-floor', str(cell['fs_floor']),
                    '--baseline-window', cell['baseline_window'],
-                   '--stage1-granularity', cell['stage1_granularity']]
+                   '--stage1-granularity', cell['stage1_granularity'],
+                   '--dataset', cell.get('dataset', 'tt')]
             if dual_cache_path:
                 cmd += ['--dual-cache', dual_cache_path]
             if args.dry_run:
@@ -223,7 +229,8 @@ def main():
                    '-c', args.global_cache,
                    '-u', str(uf_path),
                    '--stage1-granularity', cell['stage1_granularity'],
-                   '--min-baseline-samples', str(cell['min_baseline_samples'])]
+                   '--min-baseline-samples', str(cell['min_baseline_samples']),
+                   '--dataset', cell.get('dataset', 'tt')]
             if dual_cache_path:
                 cmd += ['--dual-cache', dual_cache_path]
             if args.dry_run:

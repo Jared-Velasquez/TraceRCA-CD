@@ -8,7 +8,6 @@ from sklearn.ensemble import RandomForestClassifier, IsolationForest
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from imblearn.under_sampling import RandomUnderSampler
-from trainticket_config import FEATURE_NAMES
 
 
 def extract_data(path):
@@ -143,21 +142,23 @@ def build_dual_cache(case_invo_path: str, output_path: str,
 @click.option('--stage1-granularity', type=click.Choice(['pair', 'operation']), default='pair',
               help='[dual only] Cache key granularity: (src,tgt) or (src,tgt,callee_method).')
 @click.option('--dataset', type=click.Choice(['tt', 'ob']), default='tt',
-              help='[dual only] Dataset config to load FEATURE_NAMES from.')
+              help='Dataset config to load FEATURE_NAMES from. Applies to both '
+                   'dual (per-case) and global cache builds.')
 def main(trace_history, invo_history, output_file,
          baseline_window, case_invo, inject_ts_us, last_slot_seconds,
          last_period_seconds, stage1_granularity, dataset):
+    cfg = importlib.import_module(
+        'trainticket_config' if dataset == 'tt' else 'onlineboutique_config'
+    )
+    FEATURE_NAMES = cfg.FEATURE_NAMES
     if baseline_window == 'dual':
         if not case_invo or inject_ts_us <= 0:
             raise click.UsageError(
                 '--baseline-window=dual requires --case-invo and --inject-ts-us'
             )
-        cfg = importlib.import_module(
-            'trainticket_config' if dataset == 'tt' else 'onlineboutique_config'
-        )
         build_dual_cache(
             case_invo, output_file, inject_ts_us, last_slot_seconds,
-            last_period_seconds, stage1_granularity, cfg.FEATURE_NAMES,
+            last_period_seconds, stage1_granularity, FEATURE_NAMES,
         )
         return
 
