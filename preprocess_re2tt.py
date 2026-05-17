@@ -51,6 +51,7 @@ INVOLVED_SET = set(INVOLVED_SERVICES)
 TRACES_COLS = [
     'traceID', 'spanID', 'serviceName',
     'startTime', 'duration', 'statusCode', 'parentSpanID',
+    'methodName', 'operationName',
 ]
 
 
@@ -101,11 +102,16 @@ def load_traces(case_dir: Path) -> pd.DataFrame:
     Column units in RE2-TT:
         startTime  — microseconds
         duration   — microseconds
+
+    methodName/operationName are loaded if present (used by per-op Stage 1);
+    if absent, the columns are filled with empty strings.
     """
     csv_path = case_dir / 'traces.csv'
+    header_cols = pd.read_csv(csv_path, nrows=0).columns.tolist()
+    available = [c for c in TRACES_COLS if c in header_cols]
     df = pd.read_csv(
         csv_path,
-        usecols=TRACES_COLS,
+        usecols=available,
         dtype={
             'traceID':     str,
             'spanID':      str,
@@ -114,12 +120,18 @@ def load_traces(case_dir: Path) -> pd.DataFrame:
             'duration':    'int64',
             'statusCode':  str,       # may be empty
             'parentSpanID': str,
+            'methodName':  str,
+            'operationName': str,
         },
         low_memory=False,
     )
-    # Normalise missing values
     df['parentSpanID'] = df['parentSpanID'].fillna('')
     df['statusCode'] = df['statusCode'].fillna('0')
+    for opt_col in ('methodName', 'operationName'):
+        if opt_col in df.columns:
+            df[opt_col] = df[opt_col].fillna('')
+        else:
+            df[opt_col] = ''
     return df
 
 
@@ -131,26 +143,46 @@ def build_span_lookup(df: pd.DataFrame) -> dict:
     return lookup
 
 
-def reconstruct_invocations(trace_spans, span_lookup):
+def _span_method(span) -> str:
+    """Return the callee method, falling back to operationName if methodName is empty."""
+    method = getattr(span, 'methodName', '') or ''
+    if not method:
+        method = getattr(span, 'operationName', '') or ''
+    return method
+
+
+def reconstruct_invocations(trace_spans, span_lookup, admit_self=False, admit_root=False):
     """
     For each span with a cross-service parent, yield one invocation tuple:
-        (src, tgt, start_us, end_us, latency_us, http_status)
+        (src, tgt, start_us, end_us, latency_us, http_status, src_method, tgt_method)
+
+    Off-switch: with admit_self=False and admit_root=False, the set of emitted
+    invocations is identical to the legacy implementation. The two trailing
+    method fields are additive — downstream consumers that key only on
+    (source, target) ignore them.
     """
     invocations = []
     for span in trace_spans:
         parent_id = span.parentSpanID
-        if not parent_id:
-            continue
-        parent = span_lookup.get(parent_id)
-        if parent is None:
+        tgt = simple_name(span.serviceName)
+        if tgt not in INVOLVED_SET:
             continue
 
-        src = simple_name(parent.serviceName)
-        tgt = simple_name(span.serviceName)
-        if src == tgt:
-            continue
-        if src not in INVOLVED_SET or tgt not in INVOLVED_SET:
-            continue
+        if not parent_id or parent_id not in span_lookup:
+            if not admit_root:
+                continue
+            src = tgt  # root span: emit as (self, self) singleton invocation
+            src_method = ''
+        else:
+            parent = span_lookup[parent_id]
+            src = simple_name(parent.serviceName)
+            if src not in INVOLVED_SET:
+                continue
+            if src == tgt and not admit_self:
+                continue
+            src_method = _span_method(parent)
+
+        tgt_method = _span_method(span)
 
         start_us = int(span.startTime)
         dur_us = int(span.duration)
@@ -162,13 +194,18 @@ def reconstruct_invocations(trace_spans, span_lookup):
         except (ValueError, AttributeError):
             status = 0
 
-        invocations.append((src, tgt, start_us, end_us, dur_us, status))
+        invocations.append(
+            (src, tgt, start_us, end_us, dur_us, status, src_method, tgt_method)
+        )
 
     return invocations
 
 
 def build_trace_dict(trace_id, invocations, label, fault_type, root_cause):
     s_t = [(inv[0], inv[1]) for inv in invocations]
+    # Method fields are additive (per-op Stage 1). Tuples may be 6 or 8 wide
+    # depending on whether reconstruct_invocations was called pre- or post-F1b.
+    has_methods = invocations and len(invocations[0]) >= 8
     return {
         'trace_id':   trace_id,
         'label':      label,
@@ -179,6 +216,8 @@ def build_trace_dict(trace_id, invocations, label, fault_type, root_cause):
         'endtime':    [inv[3] for inv in invocations],
         'latency':    [inv[4] for inv in invocations],
         'http_status':[inv[5] for inv in invocations],
+        'caller_method': [inv[6] if has_methods else '' for inv in invocations],
+        'callee_method': [inv[7] if has_methods else '' for inv in invocations],
     }
 
 
@@ -186,7 +225,8 @@ def build_trace_dict(trace_id, invocations, label, fault_type, root_cause):
 # Per-case processing
 # ---------------------------------------------------------------------------
 
-def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_seconds: int = 0):
+def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_seconds: int = 0,
+                 admit_self: bool = False, admit_root: bool = False):
     """
     Convert one RE2-TT case directory to TraceRCA pkl files.
     Writes:
@@ -233,7 +273,9 @@ def process_case(case_dir: Path, output_dir: Path, normal_ratio: float, warmup_s
         else:
             label = 1
 
-        invocations = reconstruct_invocations(spans, span_lookup)
+        invocations = reconstruct_invocations(
+            spans, span_lookup, admit_self=admit_self, admit_root=admit_root,
+        )
         if not invocations:
             continue
 
@@ -327,6 +369,15 @@ def main():
         help='Seconds after injection to treat as warm-up (label=0). '
              'Recommended: 60 for cpu/mem faults (default: 0 = no change).',
     )
+    parser.add_argument(
+        '--admit-self-spans', action='store_true', default=False,
+        help='F1b: keep spans where caller==callee. Default off = legacy behavior.',
+    )
+    parser.add_argument(
+        '--admit-root-spans', action='store_true', default=False,
+        help='F1b: emit root spans as (self, self) singleton invocations. '
+             'Default off = legacy behavior.',
+    )
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -341,7 +392,10 @@ def main():
 
     print(f"Found {len(case_dirs)} case(s) to process.")
     for case_dir in case_dirs:
-        process_case(case_dir, output_dir, args.normal_ratio, args.warmup_seconds)
+        process_case(
+            case_dir, output_dir, args.normal_ratio, args.warmup_seconds,
+            admit_self=args.admit_self_spans, admit_root=args.admit_root_spans,
+        )
 
     print("\nAll done.")
 
